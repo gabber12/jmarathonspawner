@@ -163,7 +163,10 @@ class MarathonSpawner(Spawner):
     @property
     def container_name(self):        
         server_name = self.name
-        return '/%s/%s/%s' % (self.app_prefix, self.user.name, server_name)
+        name = '/%s/%s' % (self.app_prefix, self.user.name)
+        if server_name:
+            name += "-"+server_name
+        return name
 
     def get_state(self):
         state = super(MarathonSpawner, self).get_state()

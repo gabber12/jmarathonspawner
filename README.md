@@ -1,14 +1,7 @@
-# Marathon Spawner (Advanced)
-This repo takes the work done at https://github.com/vigsterkr/marathonspawner
+# Jupyter Marathon Spawner
 
-And seeks to update, document, and extend it for use in multi-role, multi-tenant environments.  
+Add Support to spin up jupyter notebooks in marathon
 
-## Changes since the fork
-
-- Support marathon credentials
-- Add `fetch` support
-- Improve healthcheck
-- Fix issue when using in `HOST` mode
 
 ## Features
 - Spawn Jupyter Notebook Single User Notebooks in Marathon
@@ -17,14 +10,9 @@ And seeks to update, document, and extend it for use in multi-role, multi-tenant
 - Set Mesos Host Constraints
 - Create Volumes on containers
 - Set Ports for users
-- Use Bridge or Host Mode
 - Allow custom start commands on single-user
-
-## Challenges
-- Creating a system to keep per user configuration information for spawn time
-- Create system to check for Notebook locations/notebook config file and create at spawn time if they don't exist
-- Currently we custom build a notebook container based on the jupyter/singleuser so that we can put LDAP information and other stuff inside it
-
+- Support named server
+- Use Bridge or Host Mode
 
 # Configuration example
 
@@ -43,10 +31,11 @@ c.MarathonSpawner.volumes = [{'containerPath': '/home/jupyter/notebooks', 'hostP
 c.MarathonSpawner.network_mode = 'HOST'
 ```
 
-According your infrastructure, you may add these changes as well:
+
+Below configs are optional
 
 ```python
-c.JupyterHub.tornado_settings = {
-   'slow_spawn_timeout': 120,
-}
+c.JupyterHub.start_timeout: 120
+
+c.JupyterHub.cleanup_servers = False # This should in general be a good idea
 ```
