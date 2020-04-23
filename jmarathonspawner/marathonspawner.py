@@ -500,7 +500,7 @@ class MarathonSpawner(Spawner):
               <div class="form-group">
 
       <label for="image">Image</label>
-      <input id="image" name="gpu" class="form-control" value="{image}"></input>
+      <input id="image" name="image" class="form-control" value="{image}"></input>
       </div>
       <br>
         """.format(
