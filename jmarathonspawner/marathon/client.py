@@ -10,7 +10,6 @@ import requests
 import requests.exceptions
 from requests_toolbelt.adapters import socket_options
 
-import marathon
 from .models import MarathonApp, MarathonDeployment, MarathonGroup, MarathonInfo, MarathonTask, MarathonEndpoint, MarathonQueueItem
 from .exceptions import ConflictError, InternalServerError, NotFoundError, MarathonHttpError, MarathonError, NoResponseError
 from .models.base import assert_valid_path

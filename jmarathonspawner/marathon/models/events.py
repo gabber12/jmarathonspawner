@@ -5,11 +5,11 @@ See:
 * https://github.com/mesosphere/marathon/blob/master/src/main/scala/mesosphere/marathon/core/event/Events.scala
 """
 
-from marathon.models.base import MarathonObject
-from marathon.models.app import MarathonHealthCheck
-from marathon.models.task import MarathonIpAddress
-from marathon.models.deployment import MarathonDeploymentPlan
-from marathon.exceptions import MarathonError
+from .base import MarathonObject
+from .app import MarathonHealthCheck
+from .task import MarathonIpAddress
+from .deployment import MarathonDeploymentPlan
+from ..exceptions import MarathonError
 
 
 class MarathonEvent(MarathonObject):

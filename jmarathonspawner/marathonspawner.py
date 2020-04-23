@@ -16,7 +16,7 @@ from .marathon.models.app import MarathonApp, MarathonHealthCheck
 from .marathon.models.container import MarathonContainerPortMapping, \
     MarathonContainer, MarathonContainerVolume, MarathonDockerContainer
 from .marathon.models.constraint import MarathonConstraint
-from marathon.exceptions import NotFoundError
+from .marathon.exceptions import NotFoundError
 from jupyterhub.spawner import Spawner
 
 # Updates the volume name to replace {username} with the actual user at run time

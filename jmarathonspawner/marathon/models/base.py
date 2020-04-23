@@ -1,7 +1,7 @@
 import json
 import re
 
-from marathon.util import to_camel_case, to_snake_case, MarathonJsonEncoder, MarathonMinimalJsonEncoder
+from ..util import to_camel_case, to_snake_case, MarathonJsonEncoder, MarathonMinimalJsonEncoder
 
 
 class MarathonObject:
