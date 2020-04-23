@@ -121,6 +121,23 @@ class MarathonSpawner(Spawner):
         )
     ).tag(config=True)
 
+    privileged = Bool(False, help="Should container run in priviledge mode").tag(config=True)
+
+    parameters = List(
+        [],
+        help = dedent(
+            """
+            A list of docker run parameters
+            [
+                {
+                    "key": "user",
+                    "value": "root
+                }
+            ]
+            """
+        )
+    ).tag(config=True)
+
     network_mode = Unicode(
         'BRIDGE',
         help="Enum of BRIDGE or HOST"
@@ -372,6 +389,7 @@ class MarathonSpawner(Spawner):
         self.cpu_limit = self.user_options.get('cpu')
         self.mem_limit = self.user_options.get('mem')
         self.image = self.user_options.get('image')
+
     @gen.coroutine
     def start(self):
         # First make a quick call to determine if user info was updated
@@ -381,6 +399,8 @@ class MarathonSpawner(Spawner):
         docker_container = MarathonDockerContainer(
             image=self.image,
             network=self.network_mode,
+            privileged=self.privileged,
+            parameters=self.parameters,
             port_mappings=self.get_port_mappings())
 
         app_container = MarathonContainer(

@@ -30,14 +30,14 @@ with open(pjoin(here, 'jmarathonspawner', '_version.py')) as f:
 
 setup_args = dict(
     name='jmarathonspawner',
-    packages=['jmarathonspawner'],
+    packages=['jmarathonspawner', 'jmarathonspawner.marathon', 'jmarathonspawner.marathon.models'],
     version=version_ns['__version__'],
     description="""MarathonSpawner: A custom spawner for Jupyterhub.""",
     long_description="Spawn single-user servers on Marathon.",
     author="Shubham Sharma",
     author_email="shubham.sha12@gmail.com",
     url="https://github.com/gabber12/marathonspawner",
-    download_url="https://github.com/gabber12/marathonspawner/archive/0.3.16.tar.gz",
+    download_url="https://github.com/gabber12/marathonspawner/archive/0.3.20.tar.gz",
     license="MIT",
     platforms="Linux, Mac OS X",
     keywords=['Jupyterhub', 'Notebook', 'Marathon', 'Spawmner'],

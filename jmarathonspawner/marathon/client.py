@@ -14,9 +14,8 @@ from .models import MarathonApp, MarathonDeployment, MarathonGroup, MarathonInfo
 from .exceptions import ConflictError, InternalServerError, NotFoundError, MarathonHttpError, MarathonError, NoResponseError
 from .models.base import assert_valid_path
 from .models.events import EventFactory, MarathonEvent
-from .util import MarathonJsonEncoder, MarathonMinimalJsonEncoder
-
-
+from .util import MarathonJsonEncoder, MarathonMinimalJsonEncoder, get_log
+log = get_log()
 class MarathonClient:
 
     """Client interface for the Marathon REST API."""
@@ -90,20 +89,20 @@ class MarathonClient:
                 response = self.session.request(
                     method, url, params=params, data=data, headers=headers,
                     auth=self.auth, timeout=self.timeout, verify=self.verify)
-                marathon.log.info('Got response from %s', server)
+                log.info('Got response from %s', server)
             except requests.exceptions.RequestException as e:
-                marathon.log.error(
+                log.error(
                     'Error while calling %s: %s', url, str(e))
 
         if response is None:
             raise NoResponseError('No remaining Marathon servers to try')
 
         if response.status_code >= 500:
-            marathon.log.error('Got HTTP {code}: {body}'.format(
+            log.error('Got HTTP {code}: {body}'.format(
                 code=response.status_code, body=response.text.encode('utf-8')))
             raise InternalServerError(response)
         elif response.status_code >= 400:
-            marathon.log.error('Got HTTP {code}: {body}'.format(
+            log.error('Got HTTP {code}: {body}'.format(
                 code=response.status_code, body=response.text.encode('utf-8')))
             if response.status_code == 404:
                 raise NotFoundError(response)
@@ -112,10 +111,10 @@ class MarathonClient:
             else:
                 raise MarathonHttpError(response)
         elif response.status_code >= 300:
-            marathon.log.warn('Got HTTP {code}: {body}'.format(
+            log.warn('Got HTTP {code}: {body}'.format(
                 code=response.status_code, body=response.text.encode('utf-8')))
         else:
-            marathon.log.debug('Got HTTP {code}: {body}'.format(
+            log.debug('Got HTTP {code}: {body}'.format(
                 code=response.status_code, body=response.text.encode('utf-8')))
 
         return response
@@ -138,12 +137,12 @@ class MarathonClient:
                     allow_redirects=False
                 )
             except Exception as e:
-                marathon.log.error(
+                log.error(
                     'Error while calling %s: %s', url, e.message)
             else:
                 if response.is_redirect and response.next:
                     urls.append(response.next.url)
-                    marathon.log.debug(f"Got redirect to {response.next.url}")
+                    log.debug(f"Got redirect to {response.next.url}")
                 elif response.ok:
                     return response.iter_lines()
 
@@ -161,15 +160,15 @@ class MarathonClient:
         """Create and start an app.
 
         :param str app_id: application ID
-        :param :class:`marathon.models.app.MarathonApp` app: the application to create
+        :param :class:`models.app.MarathonApp` app: the application to create
         :param bool minimal: ignore nulls and empty collections
 
         :returns: the created app (on success)
-        :rtype: :class:`marathon.models.app.MarathonApp` or False
+        :rtype: :class:`models.app.MarathonApp` or False
         """
         app.id = assert_valid_path(app_id.lower())
         data = app.to_json(minimal=minimal)
-        marathon.log.debug('create app JSON sent: {}'.format(data))
+        log.debug('create app JSON sent: {}'.format(data))
         response = self._do_request('POST', '/v2/apps', data=data)
         if response.status_code == 201:
             return self._parse_response(response, MarathonApp)
@@ -373,13 +372,13 @@ class MarathonClient:
         :rtype: dict
         """
         if instances is None and delta is None:
-            marathon.log.error('instances or delta must be passed')
+            log.error('instances or delta must be passed')
             return
 
         try:
             app = self.get_app(app_id)
         except NotFoundError:
-            marathon.log.error(f'App "{app_id}" not found')
+            log.error(f'App "{app_id}" not found')
             return
 
         desired = instances if instances is not None else (
