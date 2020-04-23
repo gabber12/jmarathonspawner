@@ -11,11 +11,11 @@ from tornado import gen
 from tornado.concurrent import run_on_executor
 from traitlets import Any, Integer, List, Unicode, default, Bool
 
-from marathon import MarathonClient
-from marathon.models.app import MarathonApp, MarathonHealthCheck
-from marathon.models.container import MarathonContainerPortMapping, \
+from .marathon import MarathonClient
+from .marathon.models.app import MarathonApp, MarathonHealthCheck
+from .marathon.models.container import MarathonContainerPortMapping, \
     MarathonContainer, MarathonContainerVolume, MarathonDockerContainer
-from marathon.models.constraint import MarathonConstraint
+from .marathon.models.constraint import MarathonConstraint
 from marathon.exceptions import NotFoundError
 from jupyterhub.spawner import Spawner
 
@@ -165,7 +165,7 @@ class MarathonSpawner(Spawner):
         server_name = self.name
         name = '/%s/%s' % (self.app_prefix, self.user.name)
         if server_name:
-            name += "-"+server_name
+            name += ("-"+server_name)
         return name
 
     def get_state(self):
@@ -413,7 +413,7 @@ class MarathonSpawner(Spawner):
             instances=1,
             labels=labels,
             ports=myports,
-            fetch=self.fetch,
+            fetch=self.fetch,   
             )
 
         app = self.marathon.create_app(self.container_name, app_request)
