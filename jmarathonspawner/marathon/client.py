@@ -67,6 +67,7 @@ class MarathonClient:
         """Parse a Marathon response into an object or list of objects."""
         target = response.json()[
             resource_name] if resource_name else response.json()
+        log.info("Got deployment list %s", target)
         if is_list:
             return [clazz.from_json(resource) for resource in target]
         else:
@@ -90,6 +91,7 @@ class MarathonClient:
                     method, url, params=params, data=data, headers=headers,
                     auth=self.auth, timeout=self.timeout, verify=self.verify)
                 log.info('Got response from %s', server)
+                log.debug('Respose %s', response.json())
             except requests.exceptions.RequestException as e:
                 log.error(
                     'Error while calling %s: %s', url, str(e))
