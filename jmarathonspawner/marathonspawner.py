@@ -3,6 +3,8 @@ import socket
 import json
 import string
 import random
+import os
+
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urlunparse
 
@@ -515,14 +517,14 @@ class MarathonSpawner(Spawner):
         """.format(
             cpu=1,
             mem='2G',
-            image='jupyter/base-notebook:lab-1.2.1'
+            image=os.environ.get('DEFAULT_NOTEBOOK_IMAGE', 'jupyter/base-notebook:lab-1.2.1')
         )
 
     def options_from_form(self, formdata):
         options = {}
         options['cpu'] = 1
         options['mem'] = '2G'
-        options['image'] = 'jupyter/base-notebook:lab-1.2.1'
+        options['image'] = os.environ.get('DEFAULT_NOTEBOOK_IMAGE', 'jupyter/base-notebook:lab-1.2.1')
         self.log.info("Options submitted %s", json.dumps(formdata))
         cpu = formdata.get('cpu', [''])[0].strip()
         if cpu:
