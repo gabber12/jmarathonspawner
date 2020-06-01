@@ -121,7 +121,10 @@ class MarathonSpawner(Spawner):
         )
     ).tag(config=True)
 
-    privileged = Bool(False, help="Should container run in priviledge mode").tag(config=True)
+    privileged = Bool(
+        False, 
+        help="Should container run in privileged mode ?"
+    ).tag(config=True)
 
     parameters = List(
         [],
@@ -137,6 +140,11 @@ class MarathonSpawner(Spawner):
             """
         )
     ).tag(config=True)
+    
+    force_pull_image = Bool(
+        True,
+        help="Should force the docker image to be pulled every time ?"
+        ).tag(config=True)
 
     network_mode = Unicode(
         'BRIDGE',
@@ -401,7 +409,8 @@ class MarathonSpawner(Spawner):
             network=self.network_mode,
             privileged=self.privileged,
             parameters=self.parameters,
-            port_mappings=self.get_port_mappings())
+            port_mappings=self.get_port_mappings(),
+            force_pull_image=self.force_pull_image)
 
         app_container = MarathonContainer(
             docker=docker_container,
